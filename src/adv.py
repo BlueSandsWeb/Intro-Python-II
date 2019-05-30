@@ -1,7 +1,9 @@
 from room import Room
 from player import Player
+import textwrap
+# from item import item
 
-# Declare all the rooms
+# =================  Declare rooms  =========================
 
 room = {
     'outside':  Room("Outside Cave Entrance",
@@ -23,7 +25,7 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
+# ===================== Link rooms together  ========================
 
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -34,27 +36,49 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-#
-# Main
-#
 
-# Make a new player object that is currently in the 'outside' room.
-# Ask for player's name
+# =========================  Main  ================================
+
+
 player_name = input("What's your character's name?")
-player = Player(player_name)
-print(f"Welcome {player}\n")
+player = Player(player_name, room['outside'])
+print(f"\nWelcome {player}\n")
 
 
-# Write a loop that:
 while True:
-    # * Prints the current room name
-    print(room['outside'])
     # * Prints the current description (the textwrap module might be useful here).
-    # * Waits for user input and decides what to do.
+    print(player.current_room)
+    cmd = input("\n=>")
+    print("")
 
-    cmd = input("\nWhat would you like to do?\n")
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-    if cmd == "q":
+    if cmd == "q":   # If the user enters "q", quit the game.
         break
-# If the user enters "q", quit the game.
+
+# If the user enters a cardinal direction, attempt to move to the room there.
+    elif cmd in ["n", "s", "e", "w"]:
+        player.travel(cmd)
+
+    # If the user enters Spells, list spells and ask which to use
+    # If the user enters help, display a list actions that can be taken
+
+    # Catch all message, command not available, please try again
+    else:
+        print("\nYou stand there stupidly.\n")
+
+
+"""
+player = Player("Brady", room['outside'])
+print(player.currentRoom)
+
+rock = Item("rock", "This is a rock")
+room['outside']
+
+while True:
+    cmd = input("-> ")
+    if cmd in ["n", "s", "e", "w"]:
+        player.travel(cmd)
+    elif cmd == "q":
+        break
+    else:
+        print("I did not understand that command\n")
+"""
