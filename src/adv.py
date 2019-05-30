@@ -76,12 +76,19 @@ while True:
         player.travel(cmd)
 
     elif cmd.split(' ')[0] == "take":
-        new_item = player.get_item(cmd.split(' ')[1])
-        print(f"You picked up {new_item}\n")
+        picked_item = player.get_item(cmd.split(' ')[1])
+        print(f"You picked up {picked_item}\n")
 
-    elif cmd == "inv":
-        for item in player.items:
-            print(f" - {item}")
+    elif cmd.split(' ')[0] == "drop":
+        dropped_item = player.drop_item(cmd.split(' ')[1])
+        print(f"You dropped {dropped_item}\n")
+
+    elif cmd == "inv" or "i" or "inventory":
+        if len(player.items) > 0:
+            for item in player.items:
+                print(f" - {item}")
+        else:
+            print("You're pack is empty")
 
     # If the user enters help, display a list actions that can be taken
 

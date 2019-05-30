@@ -37,3 +37,10 @@ class Player:
                 self.items.append(self.current_room.items[i])
                 del self.current_room.items[i]
                 return item
+
+    def drop_item(self, item):
+        for i in range(len(self.items)):
+            if item == self.items[i].name:
+                self.current_room.items.append(self.items[i])
+                del self.items[i]
+                return item
