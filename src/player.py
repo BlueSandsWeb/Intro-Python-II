@@ -8,6 +8,7 @@ class Player:
         self.current_room = starting_room
         self.hp = 15
         self.mp = 15
+        self.items = []
         self.spells = [
             {'name': 'fireball', 'cost': 2, 'damage': 3},
             {'name': 'spark', 'cost': 1, 'damage': 2}
@@ -20,7 +21,6 @@ class Player:
         next_room = self.current_room.get_room_in_direction(direction)
         if next_room is not None:
             self.current_room = next_room
-            # print(self.current_room)
         else:
             print("You can't go that way.\n")
 
@@ -31,19 +31,9 @@ class Player:
                 f"{spell['name']}, cost: {spell['cost']}, damage: {spell['damage']}")
         print()
 
-
-"""
-
-class Player:
-    def __init__(self, name, startingRoom):
-        self.name = name
-        self.currentRoom = startingRoom
-    def travel(self, direction):
-        nextRoom = self.currentRoom.getRoomInDirection(direction)
-        if nextRoom is not None:
-            self.currentRoom = nextRoom
-            print(self.currentRoom)
-        else:
-            print("You cannot move in that direction.")
-
-"""
+    def get_item(self, item):
+        for i in range(len(self.current_room.items)):
+            if item == self.current_room.items[i].name:
+                self.items.append(self.current_room.items[i])
+                del self.current_room.items[i]
+                return item
