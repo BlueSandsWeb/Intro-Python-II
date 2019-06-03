@@ -1,10 +1,13 @@
 from room import Room
+from player import Player
+import textwrap
+from items import Item
 
-# Declare all the rooms
+# =================  Declare rooms  =========================
 
 room = {
     'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+                     "North of you, the cave mouth beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -22,7 +25,7 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
+# ===================== Link rooms together  ========================
 
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -33,19 +36,62 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-#
-# Main
-#
+# ======================= Add items to rooms ========================
 
-# Make a new player object that is currently in the 'outside' room.
+room['outside'].items.append(Item("rock", "It's a fist sized rock"))
+room['outside'].items.append(Item("debris", "A pile of trash"))
+room['foyer'].items.append(
+    Item("orb", "A funny looking key with a skull on it"))
+room['overlook'].items.append(
+    Item("key", "A funny looking key with a skull on it"))
 
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+# print("This:")
+# print(room['outside'].items[0].description)
+# print(room['outside'].items[1])
+
+# =========================  Main  ================================
+
+# print(room['outside'].items)
+
+player_name = input("What's your character's name?")
+player = Player(player_name, room['outside'])
+print(f"\nWelcome {player}\n")
+
+
+while True:
+    # * Prints the current description (the textwrap module might be useful here).
+    print("------------------------------\n")
+    print(player.current_room)
+    print(f"You can go: {player.current_room.get_room_exits()}\n")
+    print(f"You see:")
+    for item in player.current_room.items:
+        print(f" - {item}")
+    cmd = input("\n=>")
+    print("")
+
+    if cmd == "q":   # If the user enters "q", quit the game.
+        break
+
+    elif cmd in ["n", "s", "e", "w"]:           # Directional commands
+        player.travel(cmd)
+
+    elif cmd.split(' ')[0] == "take":
+        picked_item = player.get_item(cmd.split(' ')[1])
+        print(f"You picked up {picked_item}\n")
+
+    elif cmd.split(' ')[0] == "drop":
+        dropped_item = player.drop_item(cmd.split(' ')[1])
+        print(f"You dropped {dropped_item}\n")
+
+    elif cmd == "inv" or "i" or "inventory":
+        if len(player.items) > 0:
+            for item in player.items:
+                print(f" - {item}")
+        else:
+            print("You're pack is empty")
+
+    # If the user enters help, display a list actions that can be taken
+
+    # Catch all message, command not available, please try again
+    else:
+        print("\nYou stand there stupidly.\n")
